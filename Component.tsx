@@ -5,7 +5,6 @@ import parse, { domToReact } from "html-react-parser";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css"; // Light theme
 import "highlight.js/styles/github-dark.css"; // Dark theme
-
 import CopyButton from "./CopyButton";
 
 const Content = ({ content }: { content: string }) => {
@@ -16,7 +15,7 @@ const Content = ({ content }: { content: string }) => {
   useEffect(() => {
     setMounted(true);
     if (contentRef.current) {
-      const codeBlocks = contentRef.current.querySelectorAll("pre.ql-syntax");
+      const codeBlocks = contentRef.current.querySelectorAll("pre");
       codeBlocks.forEach((block) => {
         hljs.highlightElement(block as HTMLElement);
       });
@@ -26,18 +25,14 @@ const Content = ({ content }: { content: string }) => {
   const sanitizedHtml = content;
 
   const wrapPreBlocks = (node: any) => {
-    if (
-      node.type === "tag" &&
-      node.name === "pre" &&
-      node.attribs.class === "ql-syntax"
-    ) {
+    if (node.type === "tag" && node.name === "pre") {
       const code = node.children[0].data;
       console.log(domToReact(node.children));
       return (
         <>
           <div className="code-block-wrapper overflow-auto">
             <CopyButton code={code} />
-            <pre className="ql-syntax">{domToReact(node.children)}</pre>
+            <pre>{domToReact(node.children)}</pre>
           </div>
         </>
       );
